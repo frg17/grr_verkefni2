@@ -1,8 +1,8 @@
-#include "BinaryTree.hpp"
+#include "SkipList.hpp"
 #include <iostream>
 #include <algorithm>
 
-BinaryTree::BinaryTree() {
+SkipList::SkipList() {
     this->root = NULL;
 }
 
@@ -10,7 +10,7 @@ Node *newNode(int key) {
     return new Node{ .key = key, .left = NULL, .right = NULL };
 }
 
-void BinaryTree::insert(int key) {
+void SkipList::insert(int key) {
     Node **current = &(this->root);
     while(*current) {
 	    int currkey = (*current)->key;
@@ -23,11 +23,11 @@ void BinaryTree::insert(int key) {
 }
 
 
-void BinaryTree::insert(std::vector<int> *keys) {
+void SkipList::insert(std::vector<int> *keys) {
     std::for_each(keys->begin(), keys->end(), [this](int key){ this->insert(key); });
 }
 
-bool BinaryTree::find(int key) const {
+bool SkipList::find(int key) const {
     Node *current = this->root;
 
     while (current) {
@@ -50,7 +50,7 @@ void _print(Node *n) {
 	_print(n->right);
 }
 
-void BinaryTree::print() {
+void SkipList::print() {
 	_print(this->root);
 	std::cout << std::endl;
 }

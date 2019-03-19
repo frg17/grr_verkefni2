@@ -1,6 +1,6 @@
-#ifndef _BinaryTree_hpp_
+#ifndef _SkipList_hpp_
 
-#define _BinaryTree_hpp_
+#define _SkipList_hpp_
 #include <vector>
 
 #ifndef _Node_hpp_extra_
@@ -15,7 +15,7 @@ typedef struct Node {
 /**
  * Tvíleitartré
  */
-class BinaryTree {
+class SkipList {
     private:
         Node *root; //Rót trés.
 
@@ -23,7 +23,7 @@ class BinaryTree {
         /**
          * Smiður
          */
-        BinaryTree();
+        SkipList();
 
         /**
          * Setur inn lykil í Tvíleitartré.

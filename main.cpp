@@ -38,6 +38,9 @@ int main(int argc, char *argv[]) {
     std::vector<int> keys_semi_ordered;
     std::vector<int> keys_random;
 
+    std::vector<int> keys_search_existing;
+    std::vector<int> keys_search_all;
+
     // Parse N
     N = std::atoi(argv[1]);
     std::cout << "Key count: " << N << std::endl;
@@ -49,18 +52,36 @@ int main(int argc, char *argv[]) {
         keys_random.push_back(i*2 + 1);
     }
 
+    // Gera tilbúna leitarlista.
+    std::random_device rand_dev;
+    std::mt19937 generator(rand_dev());
+    std::uniform_int_distribution<int> odds(0, N-1);
+    std::uniform_int_distribution<int> odds_evens(0, (N-1)*2);
+    for (int i = 0; i < N * 2; i++) {
+        int randOdd = odds(generator) * 2 + 1;
+        int randOddEven = odds_evens(generator);
+        keys_search_existing.push_back(randOdd);
+        keys_search_all.push_back(randOddEven);
+    }
+
+
     semiRandomize(&keys_semi_ordered);
     randomize(&keys_random);
 
     // Setja upp gagnagrindur.
     BinaryTree binaryTree_random;
-    BinaryTree binaryTree_semi_randomized;
+    BinaryTree binaryTree_semi_ordered;
 	
 	Treap treap_random;
+    Treap treap_semi_ordered;
 
-    //Tímasetja innsetningar.
     using namespace std::chrono;
     
+    /*
+        Tímataka á innsetningum.
+    */
+    std::cout << "Timing: Insertions ---------------------------------------------------" << std::endl;
+
     auto start = high_resolution_clock::now();
     binaryTree_random.insert(&keys_random);
     auto stop = high_resolution_clock::now();
@@ -70,19 +91,101 @@ int main(int argc, char *argv[]) {
 
 
     start = high_resolution_clock::now();
-    binaryTree_semi_randomized.insert(&keys_semi_ordered);
+    binaryTree_semi_ordered.insert(&keys_semi_ordered);
     stop = high_resolution_clock::now();
     dur = duration_cast<microseconds>(stop - start);
     std::cout << "Binary Tree & Insert & Semi-Ordered & " << dur.count() << "us\\\\" << std::endl;
-	//binaryTree_semi_randomized.print();
+	//binaryTree_semi_ordered.print();
 	
 	start = high_resolution_clock::now();
 	treap_random.insert(&keys_random);
 	stop = high_resolution_clock::now();
 	dur = duration_cast<microseconds>(stop - start);
 	std::cout << "Treap & Insert & Random & " << dur.count() << "us\\\\" << std::endl;
-	treap_random.print();
+	//treap_random.print();
 
+    start = high_resolution_clock::now();
+	treap_semi_ordered.insert(&keys_semi_ordered);
+	stop = high_resolution_clock::now();
+	dur = duration_cast<microseconds>(stop - start);
+	std::cout << "Treap & Insert & Semi-ordered & " << dur.count() << "us\\\\" << std::endl;
+	//treap_semi_ordered.print();
+
+
+    /*
+        Tímataka á leit.
+    */
+
+    std::cout << "Timing: Search -------------------------------------------------------" << std::endl;
+    
+    // BINARY TREE RANDOM
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        binaryTree_random.find(keys_search_existing[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Binary Tree & Search & Random & Existing & " << dur.count() << "us\\\\" << std::endl;
+
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        binaryTree_random.find(keys_search_all[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Binary Tree & Search & Random & All & " << dur.count() << "us\\\\" << std::endl;
+    
+    // BINARY TREE SEMI ORDERED
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        binaryTree_semi_ordered.find(keys_search_existing[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Binary Tree & Search & Semi-Ordered & Existing & " << dur.count() << "us\\\\" << std::endl;
+
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        binaryTree_semi_ordered.find(keys_search_all[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Binary Tree & Search & Semi-Ordered & All & " << dur.count() << "us\\\\" << std::endl;
+
+
+    // Treap TREE RANDOM
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        treap_random.find(keys_search_existing[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Treap & Search & Random & Existing & " << dur.count() << "us\\\\" << std::endl;
+
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        treap_random.find(keys_search_all[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Treap & Search & Random & All & " << dur.count() << "us\\\\" << std::endl;
+    
+    // BINARY TREE SEMI ORDERED
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        treap_semi_ordered.find(keys_search_existing[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Treap & Search & Semi-Ordered & Existing & " << dur.count() << "us\\\\" << std::endl;
+
+    start = high_resolution_clock::now();
+    for (int i = 0; i < N * 2; i++) {
+        treap_semi_ordered.find(keys_search_all[i]);
+    }
+    stop = high_resolution_clock::now();
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Treap & Search & Semi-Ordered & All & " << dur.count() << "us\\\\" << std::endl;
 
     return 0;
 }

@@ -24,7 +24,6 @@ class Treap {
 	    std::uniform_int_distribution<int> distribution;
 		TreapNode *newNode(int key);
     
-
     public:
         /**
          * Smiður
@@ -47,7 +46,7 @@ class Treap {
          * Finnur lykil í Treap
          * @param{int}{key} Lykillinn sem á að finna.
          */
-        bool find(int key);
+        bool find(int key) const;
 
 	void print();
 };

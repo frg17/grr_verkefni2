@@ -18,12 +18,6 @@ TreapNode *Treap::newNode(int key) {
 }
 
 
-typedef struct LinkedList {
-	struct LinkedList* parent;
-	TreapNode *node;
-} LinkedList;
-
-
 void turnRight(TreapNode *current, TreapNode *parent, TreapNode *granny) {
 	TreapNode *tmp = current->right;
 	current->right = parent;
@@ -55,33 +49,45 @@ void turnLeft(TreapNode *current, TreapNode *parent, TreapNode *granny) {
 
 void Treap::insert(int key) {
     TreapNode **current = &(this->root);
-	LinkedList *llnode = NULL;
+	std::vector<TreapNode*> links;
 
     while(*current) {
-		llnode = new LinkedList{ .parent = llnode, .node = *current};
-
+		links.push_back(*current);
 	    int currkey = (*current)->key;
 		if (key > currkey)
 			current = &((*current)->right);
 		else
 			current = &((*current)->left);
 	}
+
 	*current = this->newNode(key);
-	if (!llnode) return;
 	
-	int priority = (*current)->priority;
-	while (llnode->parent && (llnode->parent->node->priority < priority)) {
-		TreapNode *granny = NULL;
-		TreapNode *parentNode = llnode->parent->node;
-		if (llnode->parent->parent) granny = llnode->parent->parent->node;
+	TreapNode *currNode = *current;
+	TreapNode *parent = NULL;
+	TreapNode *granny  = NULL;
+	if (!links.empty()) {
+		parent = links.back();
+		links.pop_back();
+	}
 		
-		if (parentNode->left == *current) {
-			turnRight(*current, parentNode, granny);
+	int priority = (currNode)->priority;
+	while (parent && (parent->priority < priority)) {
+		
+		if (!links.empty()) {
+			granny = links.back();
+			links.pop_back();
 		} else {
-			turnLeft(*current, parentNode, granny);	
+			this->root = currNode;
+		}
+		
+		if (parent->left == currNode) {
+			turnRight(currNode, parent, granny);
+		} else {
+			turnLeft(currNode, parent, granny);	
 		}
 
-		llnode = llnode->parent;
+		parent = granny;
+		granny = NULL;
 	}
 }
 
@@ -89,11 +95,10 @@ void Treap::insert(std::vector<int> *keys) {
     std::for_each(keys->begin(), keys->end(), [this](int key){ this->insert(key); });
 }
 
-bool Treap::find(int key) {
+bool Treap::find(int key) const {
     TreapNode *current = this->root;
 
-    while (true) {
-        if (current == NULL) return false;
+    while (current) {
         if (current->key == key) {
             return true;
         } else if (key < current->key) {
@@ -102,6 +107,8 @@ bool Treap::find(int key) {
             current = current->right;
         }
     }
+
+	return false;
 }
 
 void _print(TreapNode *n) {
