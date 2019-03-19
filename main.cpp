@@ -1,4 +1,5 @@
 #include <BinaryTree.hpp>
+#include <Treap.hpp>
 
 #include <iostream>
 #include <vector>
@@ -10,7 +11,7 @@ void semiRandomize(std::vector<int> *keys) {
     int N = keys->size();
     std::random_device rand_dev;
     std::mt19937 generator(rand_dev());
-    std::uniform_int_distribution<int> distr(0, N);
+    std::uniform_int_distribution<int> distr(0, N-1);
     for (int i = 0; i < N / 10; i++) {
         int a = distr(generator);
         int b = distr(generator);
@@ -23,7 +24,8 @@ void semiRandomize(std::vector<int> *keys) {
 }
 
 void randomize(std::vector<int> *keys) {
-    std::random_shuffle(keys->begin(), keys->end());
+	std::random_shuffle(keys->begin(), keys->end());
+        
 }
 
 int main(int argc, char *argv[]) {
@@ -53,21 +55,33 @@ int main(int argc, char *argv[]) {
     // Setja upp gagnagrindur.
     BinaryTree binaryTree_random;
     BinaryTree binaryTree_semi_randomized;
+	
+	Treap treap_random;
 
     //Tímasetja innsetningar.
     using namespace std::chrono;
     
     auto start = high_resolution_clock::now();
-    binaryTree_random.insert(keys_random);
+    binaryTree_random.insert(&keys_random);
     auto stop = high_resolution_clock::now();
-    auto dur = duration_cast<nanoseconds>(stop - start);
-    std::cout << "Binary Tree & Insert & Random & " << dur.count() << "us" << std::endl;
+    auto dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Binary Tree & Insert & Random & " << dur.count() << "us\\\\" << std::endl;
+	//binaryTree_random.print();
+
 
     start = high_resolution_clock::now();
-    binaryTree_semi_randomized.insert(keys_semi_ordered);
+    binaryTree_semi_randomized.insert(&keys_semi_ordered);
     stop = high_resolution_clock::now();
-    dur = duration_cast<nanoseconds>(stop - start);
-    std::cout << "Binary Tree & Insert & Semi-Ordered & " << dur.count() << "us" << std::endl;
+    dur = duration_cast<microseconds>(stop - start);
+    std::cout << "Binary Tree & Insert & Semi-Ordered & " << dur.count() << "us\\\\" << std::endl;
+	//binaryTree_semi_randomized.print();
+	
+	start = high_resolution_clock::now();
+	treap_random.insert(&keys_random);
+	stop = high_resolution_clock::now();
+	dur = duration_cast<microseconds>(stop - start);
+	std::cout << "Treap & Insert & Random & " << dur.count() << "us\\\\" << std::endl;
+	treap_random.print();
 
 
     return 0;

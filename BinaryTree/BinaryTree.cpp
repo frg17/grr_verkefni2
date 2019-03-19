@@ -1,4 +1,5 @@
 #include "BinaryTree.hpp"
+#include <iostream>
 #include <algorithm>
 
 BinaryTree::BinaryTree() {
@@ -10,31 +11,20 @@ Node *newNode(int key) {
 }
 
 void BinaryTree::insert(int key) {
-    if (this->root == NULL) {
-        this->root = newNode(key);
-    } else {
-        Node *current = this->root;
-        while (true) {
-            if (key < current->key) {
-                if (current->left == NULL) {
-                    current->left = newNode(key);
-                    return;
-                }
-                current = current->left;
-            } else {
-                if (current->right == NULL) {
-                    current->right = newNode(key);
-                    return;
-                }
-                current = current->right;
-            }
-        }
-    }
+    Node **current = &(this->root);
+    while(*current) {
+	    int currkey = (*current)->key;
+		if (key > currkey)
+			current = &((*current)->right);
+		else
+			current = &((*current)->left);
+	}
+	*current = newNode(key);
 }
 
 
-void BinaryTree::insert(std::vector<int> keys) {
-    std::for_each(keys.begin(), keys.end(), [this](int key){ this->insert(key); });
+void BinaryTree::insert(std::vector<int> *keys) {
+    std::for_each(keys->begin(), keys->end(), [this](int key){ this->insert(key); });
 }
 
 bool BinaryTree::find(int key) {
@@ -51,3 +41,16 @@ bool BinaryTree::find(int key) {
         }
     }
 }
+
+void _print(Node *n) {
+	if (n == NULL) return;
+	_print(n->left);
+	std::cout << n->key << " ";
+	_print(n->right);
+}
+
+void BinaryTree::print() {
+	_print(this->root);
+	std::cout << std::endl;
+}
+

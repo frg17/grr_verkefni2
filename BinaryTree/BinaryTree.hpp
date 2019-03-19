@@ -3,12 +3,14 @@
 #define _BinaryTree_hpp_
 #include <vector>
 
+#ifndef _Node_hpp_extra_
+#define _Node_hpp_extra_
 typedef struct Node {
     int key;
     struct Node *left;
     struct Node *right;
 } Node;
-
+#endif
 
 /**
  * Tvíleitartré
@@ -33,13 +35,15 @@ class BinaryTree {
          * Setur inn marga lykla í tvíleitartréð
          * @param{std::vector}{keys} Lyklar sem eiga að fara í tréð.
          */  
-        void insert(std::vector<int> keys);
+        void insert(std::vector<int> *keys);
 
         /**
          * Finnur lykil í tvíleitartrénu.
          * @param{int}{key} Lykillinn sem á að finna.
          */
         bool find(int key);
+
+	void print();
 };
 
 #endif
