@@ -24,7 +24,9 @@ void BinaryTree::insert(int key) {
 
 
 void BinaryTree::insert(std::vector<int> *keys) {
-    std::for_each(keys->begin(), keys->end(), [this](int key){ this->insert(key); });
+    for (int key : *keys) {
+        this->insert(key);
+    }
 }
 
 bool BinaryTree::find(int key) const {

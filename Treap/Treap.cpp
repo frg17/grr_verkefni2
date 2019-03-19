@@ -14,7 +14,6 @@ Treap::Treap() {
 TreapNode *Treap::newNode(int key) {
 	int priority = this->distribution(this->generator);
     return new TreapNode{ key: key, priority: priority, left: NULL, right: NULL };
-
 }
 
 
@@ -92,7 +91,9 @@ void Treap::insert(int key) {
 }
 
 void Treap::insert(std::vector<int> *keys) {
-    std::for_each(keys->begin(), keys->end(), [this](int key){ this->insert(key); });
+    for (int key : *keys) {
+		this->insert(key);
+	}
 }
 
 bool Treap::find(int key) const {

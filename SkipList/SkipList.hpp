@@ -2,22 +2,28 @@
 
 #define _SkipList_hpp_
 #include <vector>
+#include <random>
+#include <limits>
 
-#ifndef _Node_hpp_extra_
-#define _Node_hpp_extra_
-typedef struct Node {
+typedef struct SkipListNode {
     int key;
-    struct Node *left;
-    struct Node *right;
-} Node;
-#endif
+    struct SkipListNode *right;
+    struct SkipListNode *down;
+} SkipListNode;
 
 /**
  * Tvíleitartré
  */
 class SkipList {
     private:
-        Node *root; //Rót trés.
+        int next;
+        std::mt19937 generator;
+	    std::uniform_int_distribution<int> distribution;
+        
+        const int MIN = std::numeric_limits<int>::min();
+        const int MAX = std::numeric_limits<int>::max();
+
+        int flipCoin();
 
     public:
         /**

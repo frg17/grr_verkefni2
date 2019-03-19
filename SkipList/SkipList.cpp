@@ -3,23 +3,22 @@
 #include <algorithm>
 
 SkipList::SkipList() {
-    this->root = NULL;
+    std::random_device rand_dev;
+	this->generator = std::mt19937(rand_dev());
+	this->distribution = std::uniform_int_distribution<int>(0, 1);
 }
 
-Node *newNode(int key) {
-    return new Node{ .key = key, .left = NULL, .right = NULL };
+int SkipList::flipCoin() {
+    return this->distribution(this->generator);
+}
+
+SkipListNode *newNode(int key) {
+
+    return new SkipListNode{ .key = key, .right = NULL, .down = NULL };
 }
 
 void SkipList::insert(int key) {
-    Node **current = &(this->root);
-    while(*current) {
-	    int currkey = (*current)->key;
-		if (key > currkey)
-			current = &((*current)->right);
-		else
-			current = &((*current)->left);
-	}
-	*current = newNode(key);
+
 }
 
 
@@ -28,30 +27,11 @@ void SkipList::insert(std::vector<int> *keys) {
 }
 
 bool SkipList::find(int key) const {
-    Node *current = this->root;
-
-    while (current) {
-        if (current->key == key) {
-            return true;
-        } else if (key < current->key) {
-            current = current->left;
-        } else {
-            current = current->right;
-        }
-    }
-
-    return false;
 }
 
-void _print(Node *n) {
-	if (n == NULL) return;
-	_print(n->left);
-	std::cout << n->key << " ";
-	_print(n->right);
+void _print(SkipListNode *n) {
 }
 
 void SkipList::print() {
-	_print(this->root);
-	std::cout << std::endl;
 }
 
