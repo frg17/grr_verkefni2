@@ -7,7 +7,7 @@ BinaryTree::BinaryTree() {
 }
 
 Node *newNode(int key) {
-    return new Node{ .key = key, .left = NULL, .right = NULL };
+    return new Node{ key, NULL, NULL };
 }
 
 void BinaryTree::insert(int key) {

@@ -16,14 +16,22 @@ typedef struct SkipListNode {
  */
 class SkipList {
     private:
-        int next;
+		int size = 0;
+		int nextSplit = 2;
+		SkipListNode *head = NULL;
+		SkipListNode *end = NULL;
+
         std::mt19937 generator;
 	    std::uniform_int_distribution<int> distribution;
-        
+
         const int MIN = std::numeric_limits<int>::min();
         const int MAX = std::numeric_limits<int>::max();
 
-        int flipCoin();
+        bool flipCoin();
+		SkipListNode *createNewChain();
+		void addLevel();
+
+		SkipListNode *down(SkipListNode *current, int key);
 
     public:
         /**

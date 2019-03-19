@@ -13,7 +13,7 @@ Treap::Treap() {
 
 TreapNode *Treap::newNode(int key) {
 	int priority = this->distribution(this->generator);
-    return new TreapNode{ key: key, priority: priority, left: NULL, right: NULL };
+    return new TreapNode{ key, priority, NULL, NULL };
 }
 
 
