@@ -8,6 +8,11 @@
 #include <algorithm>
 #include <chrono>
 
+#include <thread>
+
+
+using namespace std::chrono;
+
 void semiRandomize(std::vector<int> *keys) {
     int N = keys->size();
     std::random_device rand_dev;
@@ -38,6 +43,60 @@ void randomize(std::vector<int> *keys) {
         (*keys)[b] = keyA;
         (*keys)[a] = keyB;
     }
+}
+
+void insertionBST(BinaryTree *bt1, BinaryTree *bt2, std::vector<int> *keys_random, std::vector<int> *keys_semi_ordered) {
+    BinaryTree binaryTree_random = *bt1;
+    BinaryTree binaryTree_semi_ordered = *bt2;
+    auto start = high_resolution_clock::now();  
+    binaryTree_random.insert(keys_random);
+    auto stop = high_resolution_clock::now();
+    auto dur = duration_cast<milliseconds>(stop - start);
+    std::cerr << "Binary Tree & Insert & Random & " << dur.count() << "ms\\\\" << std::endl;
+	//binaryTree_random.print();
+
+    start = high_resolution_clock::now();
+    binaryTree_semi_ordered.insert(keys_semi_ordered);
+    stop = high_resolution_clock::now();
+    dur = duration_cast<milliseconds>(stop - start);
+    std::cerr << "Binary Tree & Insert & Semi-Ordered & " << dur.count() << "ms\\\\" << std::endl;
+	//binaryTree_semi_ordered.print();
+}
+
+void insertionTreap(Treap *bt1, Treap *bt2, std::vector<int> *keys_random, std::vector<int> *keys_semi_ordered) {
+    Treap binaryTree_random = *bt1;
+    Treap binaryTree_semi_ordered = *bt2;
+    auto start = high_resolution_clock::now();  
+    binaryTree_random.insert(keys_random);
+    auto stop = high_resolution_clock::now();
+    auto dur = duration_cast<milliseconds>(stop - start);
+    std::cerr << "Treap & Insert & Random & " << dur.count() << "ms\\\\" << std::endl;
+	//binaryTree_random.print();
+
+    start = high_resolution_clock::now();
+    binaryTree_semi_ordered.insert(keys_semi_ordered);
+    stop = high_resolution_clock::now();
+    dur = duration_cast<milliseconds>(stop - start);
+    std::cerr << "Treap & Insert & Semi-Ordered & " << dur.count() << "ms\\\\" << std::endl;
+	//binaryTree_semi_ordered.print();
+}
+
+void insertionSkipList(SkipList *bt1, SkipList *bt2, std::vector<int> *keys_random, std::vector<int> *keys_semi_ordered) {
+    SkipList binaryTree_random = *bt1;
+    SkipList binaryTree_semi_ordered = *bt2;
+    auto start = high_resolution_clock::now();  
+    binaryTree_random.insert(keys_random);
+    auto stop = high_resolution_clock::now();
+    auto dur = duration_cast<milliseconds>(stop - start);
+    std::cerr << "SkipList & Insert & Random & " << dur.count() << "ms\\\\" << std::endl;
+	//binaryTree_random.print();
+
+    start = high_resolution_clock::now();
+    binaryTree_semi_ordered.insert(keys_semi_ordered);
+    stop = high_resolution_clock::now();
+    dur = duration_cast<milliseconds>(stop - start);
+    std::cerr << "SkipList & Insert & Semi-Ordered & " << dur.count() << "ms\\\\" << std::endl;
+	//binaryTree_semi_ordered.print();
 }
 
 int main(int argc, char *argv[]) {
@@ -90,63 +149,27 @@ int main(int argc, char *argv[]) {
 	SkipList skipList_random;
 	SkipList skipList_semi_ordered;
 
-    using namespace std::chrono;
+    
     
     /*
         Tímataka á innsetningum.
     */
-    std::cout << "Timing: Insertions ---------------------------------------------------" << std::endl;
+    std::cout << "Timing: Insertions ---------------------------------------------------" << std::endl; 
 
-    auto start = high_resolution_clock::now();
-    binaryTree_random.insert(&keys_random);
-    auto stop = high_resolution_clock::now();
-    auto dur = duration_cast<milliseconds>(stop - start);
-    std::cout << "Binary Tree & Insert & Random & " << dur.count() << "ms\\\\" << std::endl;
-	//binaryTree_random.print();
-
-    start = high_resolution_clock::now();
-    binaryTree_semi_ordered.insert(&keys_semi_ordered);
-    stop = high_resolution_clock::now();
-    dur = duration_cast<milliseconds>(stop - start);
-    std::cout << "Binary Tree & Insert & Semi-Ordered & " << dur.count() << "ms\\\\" << std::endl;
-	//binaryTree_semi_ordered.print();
+    
 	
-
-	start = high_resolution_clock::now();
-	treap_random.insert(&keys_random);
-	stop = high_resolution_clock::now();
-	dur = duration_cast<milliseconds>(stop - start);
-	std::cout << "Treap & Insert & Random & " << dur.count() << "ms\\\\" << std::endl;
-	//treap_random.print();
-
-    start = high_resolution_clock::now();
-	treap_semi_ordered.insert(&keys_semi_ordered);
-	stop = high_resolution_clock::now();
-	dur = duration_cast<milliseconds>(stop - start);
-	std::cout << "Treap & Insert & Semi-ordered & " << dur.count() << "ms\\\\" << std::endl;
-	//treap_semi_ordered.print();
-
-
-	start = high_resolution_clock::now();
-	skipList_random.insert(&keys_random);
-	stop = high_resolution_clock::now();
-	dur = duration_cast<milliseconds>(stop - start);
-	std::cout << "SkipList & Insert & Random & " << dur.count() << "ms\\\\" << std::endl;
-	//skipList_random.print();
-
-	start = high_resolution_clock::now();
-	skipList_semi_ordered.insert(&keys_semi_ordered);
-	stop = high_resolution_clock::now();
-	dur = duration_cast<milliseconds>(stop - start);
-	std::cout << "Skip List & Insert & Semi-ordered & " << dur.count() << "ms\\\\" << std::endl;
 	//skipList_semi_ordered.print();
 
-    /*
-        Tímataka á leit.
-    */
+    std::thread bstInsert(insertionBST, &binaryTree_random, &binaryTree_semi_ordered, &keys_random, &keys_semi_ordered);
+    std::thread treapInsert(insertionTreap, &treap_random, &treap_semi_ordered, &keys_random, &keys_semi_ordered);
+    std::thread skipListInsert(insertionSkipList, &skipList_random, &skipList_semi_ordered, &keys_random, &keys_semi_ordered);
 
+
+    bstInsert.join();
+    treapInsert.join();
+    skipListInsert.join();
     std::cout << "Timing: Search -------------------------------------------------------" << std::endl;
-    
+    /*
     // BINARY TREE RANDOM
     start = high_resolution_clock::now();
     for (int i = 0; i < N * 2; i++) {
@@ -250,6 +273,7 @@ int main(int argc, char *argv[]) {
 	stop = high_resolution_clock::now();
 	dur = duration_cast<milliseconds>(stop - start);
 	std::cout << "SkipList & Search & Semi-Ordered & All & " << dur.count() << "ms\\\\" << std::endl;
-
+    */
+   
     return 0;
 }
