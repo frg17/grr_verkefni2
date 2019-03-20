@@ -25,8 +25,19 @@ void semiRandomize(std::vector<int> *keys) {
 }
 
 void randomize(std::vector<int> *keys) {
-	std::random_shuffle(keys->begin(), keys->end());
-        
+	int N = keys->size();
+    std::random_device rand_dev;
+    std::mt19937 generator(rand_dev());
+    std::uniform_int_distribution<int> distr(0, N-1);
+    for (int i = 0; i < N; i++) {
+        int a = distr(generator);
+        int b = distr(generator);
+        int keyA = (*keys)[a];
+        int keyB = (*keys)[b];
+
+        (*keys)[b] = keyA;
+        (*keys)[a] = keyB;
+    }
 }
 
 int main(int argc, char *argv[]) {
